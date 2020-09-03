@@ -1,8 +1,11 @@
+import axios from 'axios'
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +31,14 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  'https://api.github.com/users/tetondan',
+  'https://api.github.com/users/dustinmyers',
+  'https://api.github.com/users/justsml',
+  'https://api.github.com/users/luishrd',
+  'https://api.github.com/users/bigknell'
+
+];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,7 +59,64 @@ const followersArray = [];
       </div>
     </div>
 */
+const cardsection = document.querySelector('.cards');
 
+function cardmaker(obj){
+  //creates div
+  const card = document.createElement('div');
+  card.classList.add("card");
+
+  const userimage = document.createElement('img');
+  userimage.src = obj.avatar_url;
+  card.append(userimage);
+  
+  const cardinfo = document.createElement('div');
+  cardinfo.classList.add('card-info');
+  card.append(cardinfo);
+
+  const name = document.createElement('h3');
+  name.classList.add('name');
+  name.textContent = obj.name
+  cardinfo.append(name);
+
+  const username = document.createElement('p');
+  username.classList.add('username');
+  username.innerHTML = obj.login
+  cardinfo.append(username);
+
+  const location = document.createElement('p');
+  location.textContent = `Location: ${obj.location}`;
+  cardinfo.append(location);
+
+  const webaddress = document.createElement('a')
+  webaddress.href = obj.html_url;
+  webaddress.textContent = obj.html_url;
+
+  const profile = document.createElement('p');
+  profile.textContent = `profile ${webaddress}`;
+  cardinfo.append(profile);
+
+  const followers = document.createElement('p');
+  followers.textContent = `Followers: ${obj.followers}`;
+  cardinfo.append(followers);
+
+  const following = document.createElement('p');
+  following.textContent = `Following: ${obj.following}`;
+  cardinfo.append(following);
+
+  const bio = document.createElement('p');
+  bio.textContent = `bio: ${obj.bio}`;
+  cardinfo.append(bio);
+  
+  return card;
+}
+axios.get('https://api.github.com/users/teranasoras')
+.then(stuff => {
+  console.log(cardsection.appendChild(cardmaker(stuff.data)));
+})
+.catch(err =>{
+  console.log(err)
+})
 /*
   List of LS Instructors Github username's:
     tetondan
@@ -58,3 +125,12 @@ const followersArray = [];
     luishrd
     bigknell
 */
+followersArray.forEach(function(item){
+  axios.get(item)
+  .then(stuff => {
+  console.log(cardsection.appendChild(cardmaker(stuff.data)));
+})
+.catch(err =>{
+  console.log(err)
+})
+})
